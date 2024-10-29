@@ -1,0 +1,224 @@
+definitions:
+  cart.PostCartsParams:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    required:
+    - product_id
+    - quantity
+    type: object
+  health_handler.HealthResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  order.PostOrdersParams:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    required:
+    - product_id
+    - quantity
+    type: object
+  order.postOrderResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  products.PostProductsParams:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    required:
+    - description
+    - name
+    - owner_id
+    - price
+    - stock
+    type: object
+  products.getProductsResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      owner_name:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    type: object
+  products.postProductResponse:
+    properties:
+      product:
+        $ref: '#/definitions/products.productResponseModel'
+    type: object
+  products.productResponseModel:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    type: object
+  user.getUserResponse:
+    properties:
+      users:
+        $ref: '#/definitions/user.userResponseModel'
+    type: object
+  user.userResponseModel:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 説明
+  title: コードカキタイ
+  version: バージョン(1.0)
+paths:
+  /v1/carts:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: カートの商品
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/cart.PostCartsParams'
+      produces:
+      - application/json
+      responses: {}
+      summary: カートに商品を追加する
+      tags:
+      - carts
+  /v1/health:
+    get:
+      consumes:
+      - application/json
+      description: ヘルスチェック
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health_handler.HealthResponse'
+      summary: ヘルスチェック
+      tags:
+      - health
+  /v1/orders:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 注文商品
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/order.PostOrdersParams'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/order.postOrderResponse'
+      summary: 注文をする
+      tags:
+      - orders
+  /v1/products:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.getProductsResponse'
+      summary: 商品一覧を取得する
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登録商品
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/products.PostProductsParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/products.postProductResponse'
+      summary: 商品を保存する
+      tags:
+      - products
+  /v1/users/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserResponse'
+      summary: ユーザーを取得する
+      tags:
+      - users
+swagger: "2.0"
